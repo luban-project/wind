@@ -22,7 +22,7 @@ public class GroovyUtil {
 
     private static ImportCustomizer buildImportCustomer() {
         ImportCustomizer customizer = new ImportCustomizer();
-        customizer.addImport("SqlStatement", "com.lvonce.wind.sql.SqlStatement");
+        customizer.addImport("SqlStatement", "com.lvonce.wind.sql.transaction.statment.SqlStatement");
 
         customizer.addImport("HttpRequestBody", "com.lvonce.wind.http.HttpRequestBody");
         customizer.addImport("HttpRequest", "com.lvonce.wind.http.HttpRequest");

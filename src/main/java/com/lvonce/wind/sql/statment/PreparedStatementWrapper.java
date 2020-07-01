@@ -1,4 +1,4 @@
-package com.lvonce.wind.sql;
+package com.lvonce.wind.sql.statment;
 
 import java.io.InputStream;
 import java.io.Reader;

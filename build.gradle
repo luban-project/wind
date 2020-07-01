@@ -1,20 +1,102 @@
 plugins {
     id 'groovy'
     id 'java'
+    id 'maven-publish'
+    id 'signing'
 }
 
-group 'org.lvonce'
+group 'com.lvonce'
+archivesBaseName = 'wind'
 version '0.1.0'
+description 'wind library'
 
 repositories {
     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
     mavenCentral()
 }
 
+javadoc {
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    classifier = 'javadoc'
+}
+
+
 sourceSets.main.java.srcDirs = []
 sourceSets.main.groovy.srcDirs += ["src/main/java"]
 sourceSets.test.java.srcDirs = []
 sourceSets.test.groovy.srcDirs += ["src/test/java"]
+
+
+
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.name
+            version "${version}"
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom {
+                name = "wind"
+                description = 'wind library'
+                url = 'https://github.com/luban-project/wind'
+
+                licenses {
+                    license {
+                        name = "The Apache License, Version 2.0"
+                        url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "thegenius"
+                        name = "thegenius"
+                        email = "thegenius@vip.qq.com"
+                    }
+                }
+                scm {
+                    url = 'https://github.com/luban-project/wind'
+                    connection = 'scm:git:git://github.com:luban-project/wind.git'
+                    developerConnection = 'scm:git:ssh://git@github.com:luban-project/wind.git'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            // 如果version以SNAPSHOT结尾就会上传到快照仓库，如果不是就上传到release仓库
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = "${sonatypeUsername}"
+                password = "${sonatypePassword}"
+            }
+        }
+
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
 
 dependencies {
 

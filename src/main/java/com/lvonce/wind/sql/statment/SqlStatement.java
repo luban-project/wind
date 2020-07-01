@@ -1,5 +1,6 @@
-package com.lvonce.wind.sql;
+package com.lvonce.wind.sql.statment;
 
+import com.lvonce.wind.sql.TransactionState;
 import com.lvonce.wind.util.ResultSetUtil;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SqlStatement {
+
+    private TransactionState state;
 
     private NamedParameterStatement namedStatement;
 
@@ -38,12 +41,13 @@ public class SqlStatement {
         }
     }
 
-    public Object query(Map<String, Object> values) throws Exception {
+    public List<Map<String, Object>> query(Map<String, Object> values) throws Exception {
         boolean bindSuccess = bindValue(values);
         if (!bindSuccess) {
             return null;
         }
         ResultSet result = namedStatement.executeQuery();
+        state.registerResult(result);
         return ResultSetUtil.toArrayOfMap(result);
     }
 
@@ -55,12 +59,13 @@ public class SqlStatement {
         return namedStatement.executeUpdate();
     }
 
-    public Object query(String name, Object value) throws Exception {
+    public List<Map<String, Object>> query(String name, Object value) throws Exception {
         boolean bindSuccess = bindValue(name, value);
         if (!bindSuccess) {
             return null;
         }
         ResultSet result = namedStatement.executeQuery();
+        state.registerResult(result);
         return ResultSetUtil.toArrayOfMap(result);
     }
 
@@ -70,5 +75,9 @@ public class SqlStatement {
             return 0;
         }
         return namedStatement.executeUpdate();
+    }
+
+    public void close() throws Exception {
+        namedStatement.close();
     }
 }

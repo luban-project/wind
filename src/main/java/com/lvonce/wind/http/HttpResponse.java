@@ -13,4 +13,8 @@ public class HttpResponse {
     private Map<String, String> headers = new LinkedHashMap<>();
 
     private Object body;
+
+    private String errCode;
+
+    private String errMessage;
 }

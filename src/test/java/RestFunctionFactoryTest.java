@@ -7,6 +7,7 @@ import com.lvonce.wind.util.JsonUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import groovy.util.logging.Slf4j;
+import org.codehaus.groovy.runtime.powerassert.PowerAssertionError;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -74,25 +75,33 @@ public class RestFunctionFactoryTest {
 
     @Test
     public void test() {
-        RestFunctionFactory factory = RestFunctionFactory.getInstance();
-        factory.register("test", "test", "groovy", script);
-        factory.register("test1", "test1", RestTestFunction::new);
-
-        DataSource dataSource = getH2DataSource();
-        Map<String, String> headers = new LinkedHashMap<>();
-        headers.put("hello", "hello");
+        try {
 
 
-        Map<String, String[]> params = new LinkedHashMap<>();
 
-        InputStream input = new ByteArrayInputStream(getContent().getBytes());
 
-        RestSqlContext context = new RestSqlContextImpl(dataSource, headers, params, input);
-        RestFunction func = factory.getFunction("test", "test", false);
-        func.applyGet(context);
-        HttpResponse response = context.getResponse();
-        String result = JsonUtil.toJson(response.getBody(), "");
-        Assert.assertEquals(result, "[{\"id\":101,\"name\":\"wang\",\"age\":23}]");
+            RestFunctionFactory factory = RestFunctionFactory.getInstance();
+            factory.register("test", "test", "groovy", script);
+            factory.register("test1", "test1", RestTestFunction::new);
+
+            DataSource dataSource = getH2DataSource();
+            Map<String, String> headers = new LinkedHashMap<>();
+            headers.put("hello", "hello");
+
+
+            Map<String, String[]> params = new LinkedHashMap<>();
+
+            InputStream input = new ByteArrayInputStream(getContent().getBytes());
+
+            RestSqlContext context = new RestSqlContextImpl(dataSource, headers, params, input);
+            RestFunction func = factory.getFunction("test1", "test1", false);
+            func.applyGetWrapper(context);
+            HttpResponse response = context.getResponse();
+            String result = JsonUtil.toJson(response.getBody(), "");
+            Assert.assertEquals(result, "[{\"id\":101,\"name\":\"wang\",\"age\":23}]");
+        } catch (PowerAssertionError ex) {
+            System.out.println(ex);
+        }
 
     }
 }
