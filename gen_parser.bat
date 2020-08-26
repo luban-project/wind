@@ -1,0 +1,1 @@
+java org.antlr.v4.Tool Hello.g4 -package com.lvonce.wind.parser -o src/main/java/com/lvonce/wind/parser

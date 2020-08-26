@@ -3,10 +3,15 @@ import com.lvonce.wind.RestFunctionFactory;
 import com.lvonce.wind.RestSqlContext;
 import com.lvonce.wind.RestSqlContextImpl;
 import com.lvonce.wind.http.HttpResponse;
-import com.lvonce.wind.util.JsonUtil;
+import com.lvonce.wind.parser.HelloLexer;
+import com.lvonce.wind.parser.HelloParser;
+import com.lvonce.wind.sql.MybatisExecutor;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import groovy.util.logging.Slf4j;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 import org.codehaus.groovy.runtime.powerassert.PowerAssertionError;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,7 +22,9 @@ import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 public class RestFunctionFactoryTest {
@@ -74,31 +81,47 @@ public class RestFunctionFactoryTest {
     }
 
     @Test
-    public void test() {
+    public void test() throws Exception {
         try {
 
 
+            CharStream charStream = CharStreams.fromString("{ old -> test } ");
+            HelloLexer lexer = new HelloLexer(charStream);
+            HelloParser parser = new HelloParser(new CommonTokenStream(lexer));
+            parser.getATN();
+            HelloParser.RContext r = parser.r();
+            System.out.println(r.ID().get(0));
+            System.out.println(r.ID().get(1));
+            System.out.println(r.exception.toString());
 
-
-            RestFunctionFactory factory = RestFunctionFactory.getInstance();
-            factory.register("test", "test", "groovy", script);
-            factory.register("test1", "test1", RestTestFunction::new);
 
             DataSource dataSource = getH2DataSource();
-            Map<String, String> headers = new LinkedHashMap<>();
-            headers.put("hello", "hello");
+            MybatisExecutor executor = MybatisExecutor.build(dataSource.getConnection());
 
 
-            Map<String, String[]> params = new LinkedHashMap<>();
+            Map<String, Object> body = new LinkedHashMap<>();
+            body.put("test", "wang");
+            List<Map<String, Object>> result2 = executor.query( "select * from data_lake where name = #{test}", body);
+            System.out.println(result2);
 
-            InputStream input = new ByteArrayInputStream(getContent().getBytes());
 
-            RestSqlContext context = new RestSqlContextImpl(dataSource, headers, params, input);
-            RestFunction func = factory.getFunction("test1", "test1", false);
-            func.applyGetWrapper(context);
-            HttpResponse response = context.getResponse();
-            String result = JsonUtil.toJson(response.getBody(), "");
-            Assert.assertEquals(result, "[{\"id\":101,\"name\":\"wang\",\"age\":23}]");
+//            RestFunctionFactory factory = RestFunctionFactory.getInstance();
+//            factory.register("test", "test", "groovy", script);
+//            factory.register("test1", "test1", RestTestFunction::new);
+//            Map<String, String> headers = new LinkedHashMap<>();
+//            headers.put("hello", "hello");
+//
+//
+//            Map<String, String[]> params = new LinkedHashMap<>();
+//
+//            InputStream input = new ByteArrayInputStream(getContent().getBytes());
+//
+//            RestSqlContext context = new RestSqlContextImpl(dataSource, headers, params, input);
+//            RestFunction func = factory.getFunction("test1", "test1", false);
+//            func.applyGetWrapper(context);
+//            HttpResponse response = context.getResponse();
+//            String result = JsonUtil.toJson(response.getBody(), "");
+//            Assert.assertEquals(result, "[{\"id\":101,\"name\":\"wang\",\"age\":23}]");
         } catch (PowerAssertionError ex) {
             System.out.println(ex);
         }
