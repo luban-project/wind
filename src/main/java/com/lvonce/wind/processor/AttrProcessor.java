@@ -18,16 +18,6 @@ import java.util.Map;
 
 import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toSimple;
 
-/**
-    * url: www.example.com/api/Hello
-    * method: POST
-    * header: {birth_day -> birthday}/{old => new}
-    * param: [String -> LocalDateTime]{"yyyy-MM-dd"}
-    * body(map): {birth_day -> birthday}/{old => new}[String -> LocalDateTime]("yyyy-MM-dd")
-    * check: (<ChineseCellPhone> or <Email>) and <Range>{1900, 2035}
-    * template(mybatis/handlerbars): select * from person where birthday = ${birthday}
-    * result: {age->Age, name->Name, gender=>Sex}
-*/
 
 public class AttrProcessor implements Processor {
 

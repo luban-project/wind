@@ -1,11 +1,7 @@
-import com.lvonce.wind.RestFunction;
-import com.lvonce.wind.RestFunctionFactory;
-import com.lvonce.wind.RestSqlContext;
-import com.lvonce.wind.RestSqlContextImpl;
+import com.lvonce.wind.*;
 import com.lvonce.wind.http.HttpResponse;
-import com.lvonce.wind.parser.HelloLexer;
-import com.lvonce.wind.parser.HelloParser;
 import com.lvonce.wind.sql.MybatisExecutor;
+import com.lvonce.wind.util.YamlUtil;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import groovy.util.logging.Slf4j;
@@ -21,10 +17,10 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+
+import static com.lvonce.wind.WindHttpResourceLoader.loadFromResource;
+import static com.lvonce.wind.WindHttpResourceLoader.loadFromResources;
 
 @Slf4j
 public class RestFunctionFactoryTest {
@@ -81,18 +77,41 @@ public class RestFunctionFactoryTest {
     }
 
     @Test
+    public void testResource() throws Exception {
+
+//        WindHttpResource resource = new WindHttpResource();
+//        resource.setUrl("/test");
+//        resource.setMethod("get");
+//
+//        WindHttpResource.InputFetcher inputFetcher = new WindHttpResource.InputFetcher();
+//        inputFetcher.setSourceName("s1");
+//        inputFetcher.setValidator("validator");
+//        List<WindHttpResource.InputFetcher> inputFetcherList = new ArrayList<>();
+//        inputFetcherList.add(inputFetcher);
+//        resource.setHeaders(inputFetcherList);
+//
+//        List<WindHttpResource> https = new ArrayList<>();
+//        https.add(resource);
+
+//        WindHttpResource.WindHttpResourceList resourceList = new WindHttpResource.WindHttpResourceList(https);
+//        resourceList.setHttps(https);
+
+
+//        Optional<String> yaml = YamlUtil.toYaml(https);
+//        System.out.println(yaml.get());
+
+       List<WindHttpResource> resources = loadFromResources("http_resource_test.yaml");
+       System.out.println(resources);
+
+//        WindHttpResource resource = loadFromResource("http_resource_test2.yaml");
+//        System.out.println(resource);
+    }
+
+
+    @Test
     public void test() throws Exception {
         try {
 
-
-            CharStream charStream = CharStreams.fromString("{ old -> test } ");
-            HelloLexer lexer = new HelloLexer(charStream);
-            HelloParser parser = new HelloParser(new CommonTokenStream(lexer));
-            parser.getATN();
-            HelloParser.RContext r = parser.r();
-            System.out.println(r.ID().get(0));
-            System.out.println(r.ID().get(1));
-            System.out.println(r.exception.toString());
 
 
             DataSource dataSource = getH2DataSource();

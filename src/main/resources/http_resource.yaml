@@ -1,0 +1,23 @@
+
+resouce1:
+    url: /api/account
+    method: GET
+    header:
+      - fetcher: header1 -> header2
+        converter: String -> Integer
+        validator: Range(10, 20)
+
+    param:
+      - oldName:
+        newName:
+        sourceType:
+        targetType:
+        validate:
+
+    body:
+    template: "<if> select * from </if>"
+    result:
+      oldName:
+      newName:
+      sourceType:
+      targetType:

@@ -1,0 +1,25 @@
+https:
+- url: /api/account
+  method: GET
+  headers:
+    - sourceName: src1
+      targetName: dst1
+      sourceType: s1
+      targetType: t1
+      validator: v1
+
+  params:
+    - sourceName: v2
+      targetName: v2
+      sourceType: v3
+      targetType: v3
+      validator: v3
+
+  body: b1
+  template: "<if> select * from </if>"
+
+  outputs:
+    - sourceName:
+      targetName:
+      sourceType:
+      targetType:

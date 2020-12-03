@@ -47,6 +47,15 @@ public class JsonUtil {
         }
     }
 
+
+    public static <T> Optional<T> fromJson(String content, Class<T> tClass) {
+        try {
+            return Optional.of(mapper.readValue(content, tClass));
+        } catch (Exception ex) {
+            return Optional.empty();
+        }
+    }
+
     public static <T> Optional<String> toJson(T obj) {
         try {
             return Optional.of(mapper.writeValueAsString(obj));

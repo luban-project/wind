@@ -7,7 +7,7 @@ plugins {
 
 group 'com.lvonce'
 archivesBaseName = 'wind'
-version '0.2.0'
+version '0.3.2'
 description 'wind library'
 
 repositories {
@@ -116,11 +116,15 @@ dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.11.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.11.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.11.0'
-
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.11.0'
 
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
     compileOnly 'org.projectlombok:lombok:1.18.2'
     annotationProcessor 'org.projectlombok:lombok:1.18.2'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.2'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.2'
+
     runtimeOnly 'com.h2database:h2:1.4.200'
     runtimeOnly 'mysql:mysql-connector-java:8.0.20'
 }

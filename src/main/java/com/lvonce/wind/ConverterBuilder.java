@@ -21,17 +21,7 @@ public class ConverterBuilder {
         }
     }
 
-    /**
-     * url: www.example.com/api/Hello
-     * method: POST
-     * name: {birth_day -> birthday}/{old => new}
-     * type: [String -> LocalDateTime]{"yyyy-MM-dd"}
-     * check: (<ChineseCellPhone> or <Email>) and <Range>{1900, 2035}
-     * template(mybatis/handlerbars): select * from person where birthday = ${birthday}
-     * result: {age->Age, name->Name, gender=>Sex}
-     * @param buildArg
-     * @return
-     */
+
     public static Converter genTypeConverter(TypeConverterBuildArg buildArg) {
         if (buildArg == null) {
             return null;
