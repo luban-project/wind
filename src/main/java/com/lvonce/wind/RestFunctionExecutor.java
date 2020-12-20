@@ -5,8 +5,10 @@ import com.lvonce.wind.http.HttpRequest;
 import com.lvonce.wind.http.HttpResponse;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 import java.util.LinkedHashMap;
 
 /**
@@ -16,6 +18,7 @@ import java.util.LinkedHashMap;
  *
  *
  */
+@Slf4j
 public class RestFunctionExecutor {
     private final LinkedHashMap<String, DataSource> sqlDataSource = new LinkedHashMap<>();
     private final RestFunctionFactory factory;
@@ -38,9 +41,19 @@ public class RestFunctionExecutor {
         this.sqlDataSource.put(name, ds);
     }
 
+    public void prepareSQLDataSource(String name, String sql) {
+        try {
+            DataSource ds = this.sqlDataSource.get(name);
+            PreparedStatement createTableStmt = ds.getConnection().prepareStatement(sql);
+            createTableStmt.executeUpdate();
+        } catch (Exception ex) {
+            log.error(ex.getLocalizedMessage());
+        }
+    }
 
-    public boolean shouldIntercept(String url) {
-        return this.factory.getUrls().contains(url);
+
+    public boolean shouldIntercept(String url, String method) {
+        return this.factory.hasFunction(url, method);
     }
 
     public HttpResponse apply(String url, String method, HttpRequest request) {

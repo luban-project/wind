@@ -3,10 +3,7 @@ package com.lvonce.wind;
 import com.lvonce.wind.util.GroovyUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 
@@ -21,6 +18,8 @@ public class RestFunctionFactory {
 
     private final Map<Pair<String, String>, RestFunction> functionCache = new LinkedHashMap<>();
 
+    private final Set<String> urls = new LinkedHashSet<>();
+
     private static final RestFunctionFactory instance = new RestFunctionFactory();
 
     public static RestFunctionFactory getInstance() {
@@ -29,9 +28,9 @@ public class RestFunctionFactory {
 
     private RestFunctionFactory() {}
 
-    public List<String> getUrls() {
-        List<String> urls = new ArrayList<>();
-        return urls;
+    public boolean hasFunction(String url, String method) {
+        Pair<String, String> key = Pair.of(url, method);
+        return supplierMap.containsKey(key);
     }
 
     private boolean register(String uri, String method, Supplier<RestFunction> supplier, int order) {
@@ -65,14 +64,35 @@ public class RestFunctionFactory {
             if (clazz == null) {
                 return false;
             }
-            return register(uri, method, clazz, SCRIPT_CODE_ORDER);
+            if (method.equalsIgnoreCase("ALL")) {
+                boolean success = true;
+                success &= register(uri, "POST", clazz, SCRIPT_CODE_ORDER);
+                success &= register(uri, "PUT", clazz, SCRIPT_CODE_ORDER);
+                success &= register(uri, "DELETE", clazz, SCRIPT_CODE_ORDER);
+                success &= register(uri, "GET", clazz, SCRIPT_CODE_ORDER);
+                return success;
+            } else {
+                return register(uri, method, clazz, SCRIPT_CODE_ORDER);
+            }
         }
         return false;
     }
 
     public boolean register(String uri, String method, Supplier<RestFunction> supplier) {
-        return register(uri, method, supplier, SRC_CODE_ORDER);
+        if (method.equalsIgnoreCase("ALL")) {
+            boolean success = true;
+            success &= register(uri, "POST", supplier, SRC_CODE_ORDER);
+            success &= register(uri, "PUT", supplier, SRC_CODE_ORDER);
+            success &= register(uri, "DELETE", supplier, SRC_CODE_ORDER);
+            success &= register(uri, "GET", supplier, SRC_CODE_ORDER);
+            return success;
+        } else {
+            return register(uri, method, supplier, SRC_CODE_ORDER);
+        }
     }
+
+
+
 
     public RestFunction getFunctionCache(String uri, String method) {
         Pair<String, String> key = Pair.of(uri, method);
