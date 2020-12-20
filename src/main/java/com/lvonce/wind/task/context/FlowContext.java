@@ -8,6 +8,7 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Data
 public class FlowContext {
@@ -17,9 +18,18 @@ public class FlowContext {
      * middle event: currTaskSeq(who provide the event), nextTaskSeq(who consume the event)
      * last event: currentTaskId(who produce the event), nextTaskSeq == -1
      */
+    private final String uuid;
     private final ArrayList<TaskRoutedEvent<?>> path = new ArrayList<>();
     private final Map<Integer, TaskRoutedEvent<?>> resultMap = new LinkedHashMap<>();
     private FlowState flowState = FlowState.EMPTY;
+
+    public FlowContext() {
+        this.uuid = UUID.randomUUID().toString();
+    }
+
+    public FlowContext(String uuid) {
+        this.uuid = uuid;
+    }
 
     public TaskRoutedEvent<?> peekEvent() {
         int last = path.size() - 1;

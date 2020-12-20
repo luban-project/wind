@@ -3,10 +3,24 @@ package com.lvonce.wind;
 import com.lvonce.wind.util.GroovyUtil;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
+
+/**
+ * 应该允许3种类型的函数注册：
+ *  源代码Groovy类，通过Annotation扫描获取（可配置热扫描路径）
+ *  源代码Java类，通过Annotation扫描获取（可配置热扫描路径）
+ *  源代码Config类，通过Annotation扫描获取（可配置热扫描路径）
+ *
+ *  数据库中Groovy类，通过数据加载获取，可配置加载表和扫描间隔
+ *  数据库中Java类，通过数据加载获取，可配置加载表和扫描间隔
+ *  数据库中Config类，通过数据加载获取，可配置加载表和扫描间隔
+ *
+ */
 @Slf4j
 public class RestFunctionFactory {
 
@@ -24,6 +38,11 @@ public class RestFunctionFactory {
     }
 
     private RestFunctionFactory() {}
+
+    public List<String> getUrls() {
+        List<String> urls = new ArrayList<>();
+        return urls;
+    }
 
     private boolean register(String uri, String method, Supplier<RestFunction> supplier, int order) {
         Pair<String, String> key = Pair.of(uri, method);

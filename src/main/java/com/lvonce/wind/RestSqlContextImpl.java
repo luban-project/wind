@@ -30,6 +30,12 @@ public class RestSqlContextImpl implements RestSqlContext {
     @Getter
     private final HttpResponse response;
 
+    public RestSqlContextImpl(Map<String, DataSource> dataSourceMap, Map<String, String> headers, Map<String, String[]> params, HttpRequestBody body) {
+        this.dataSourceMap = dataSourceMap;
+        this.request = new HttpRequest(headers, params, body);
+        this.response = new HttpResponse();
+    }
+
     public RestSqlContextImpl(Map<String, DataSource> dataSourceMap, Map<String, String> headers, Map<String, String[]> params, InputStream inputStream) {
         this.dataSourceMap = dataSourceMap;
         this.request = new HttpRequest(headers, params, new HttpRequestBody(inputStream));
@@ -40,6 +46,13 @@ public class RestSqlContextImpl implements RestSqlContext {
         this.dataSourceMap = new LinkedHashMap<>();
         this.dataSourceMap.put("__default__", dataSource);
         this.request = new HttpRequest(headers, params, new HttpRequestBody(inputStream));
+        this.response = new HttpResponse();
+    }
+
+    public RestSqlContextImpl(DataSource dataSource, Map<String, String> headers, Map<String, String[]> params, HttpRequestBody body) {
+        this.dataSourceMap = new LinkedHashMap<>();
+        this.dataSourceMap.put("__default__", dataSource);
+        this.request = new HttpRequest(headers, params, body);
         this.response = new HttpResponse();
     }
 
