@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class SqlStatement {
         }
     }
 
-    public List<Map<String, Object>> query(Map<String, Object> values) throws Exception {
+    public List<Map<String, Object>> query(Map<String, Object> values) throws SQLException {
         boolean bindSuccess = bindValue(values);
         if (!bindSuccess) {
             return null;
@@ -51,7 +52,7 @@ public class SqlStatement {
         return ResultSetUtil.toArrayOfMap(result);
     }
 
-    public int update(Map<String, Object> values) throws Exception {
+    public int update(Map<String, Object> values) throws SQLException {
         boolean bindSuccess = bindValue(values);
         if (!bindSuccess) {
             return 0;
@@ -59,7 +60,7 @@ public class SqlStatement {
         return namedStatement.executeUpdate();
     }
 
-    public List<Map<String, Object>> query(String name, Object value) throws Exception {
+    public List<Map<String, Object>> query(String name, Object value) throws SQLException {
         boolean bindSuccess = bindValue(name, value);
         if (!bindSuccess) {
             return null;
@@ -69,7 +70,7 @@ public class SqlStatement {
         return ResultSetUtil.toArrayOfMap(result);
     }
 
-    public int update(String name, Object value) throws Exception {
+    public int update(String name, Object value) throws SQLException {
         boolean bindSuccess = bindValue(name, value);
         if (!bindSuccess) {
             return 0;
@@ -77,7 +78,7 @@ public class SqlStatement {
         return namedStatement.executeUpdate();
     }
 
-    public void close() throws Exception {
+    public void close() throws SQLException {
         namedStatement.close();
     }
 }
