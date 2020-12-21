@@ -56,10 +56,10 @@ public class RestFunctionExecutor {
         return this.factory.hasFunction(url, method);
     }
 
-    public HttpResponse apply(String url, String method, HttpRequest request) {
+    public HttpResponse apply(String url, String method, HttpRequest request) throws Exception {
         RestSqlContext context = new RestSqlContextImpl(this.sqlDataSource, request.getHeaders(), request.getParams(), request.getBody());
         RestFunction func = factory.getFunction(url, method, false);
-        func.applyGetWrapper(context);
+        func.apply(method, context);
         return context.getResponse();
     }
 

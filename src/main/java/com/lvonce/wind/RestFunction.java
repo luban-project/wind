@@ -1,59 +1,35 @@
 package com.lvonce.wind;
 
 import com.lvonce.wind.http.HttpResponse;
+import org.apache.commons.lang3.NotImplementedException;
 import org.codehaus.groovy.runtime.powerassert.PowerAssertionError;
 
 public interface RestFunction {
 
-    default void applyGet(RestContext body) { }
-
-    default void applyPut(RestContext body) { }
-
-    default void applyDelete(RestContext body) { }
-
-    default void applyPost(RestContext body) { }
-
-    default void applyGetWrapper(RestContext body) {
-        try {
-            applyGet(body);
-        } catch (PowerAssertionError error) {
-            HttpResponse response = body.getResponse();
-            response.setBody(null);
-            response.setErrCode("PARAM_ASSERT_ERROR");
-            response.setErrMessage(error.getLocalizedMessage());
+    default void apply(String method, RestContext ctx) throws Exception {
+        switch (method) {
+            case "GET":
+                applyGet(ctx);
+                break;
+            case "POST":
+                applyPost(ctx);
+                break;
+            case "PUT":
+                applyPut(ctx);
+                break;
+            case "DELETE":
+                applyDelete(ctx);
+                break;
+            default:
+                throw new NotImplementedException(method);
         }
     }
 
-    default void applyPutWrapper(RestContext body) {
-        try {
-            applyPut(body);
-        } catch (PowerAssertionError error) {
-            HttpResponse response = body.getResponse();
-            response.setBody(null);
-            response.setErrCode("PARAM_ASSERT_ERROR");
-            response.setErrMessage(error.getLocalizedMessage());
-        }
-    }
+    default void applyGet(RestContext body) throws Exception { }
 
-    default void applyDeleteWrapper(RestContext body) {
-        try {
-            applyDelete(body);
-        } catch (PowerAssertionError error) {
-            HttpResponse response = body.getResponse();
-            response.setBody(null);
-            response.setErrCode("PARAM_ASSERT_ERROR");
-            response.setErrMessage(error.getLocalizedMessage());
-        }
-    }
+    default void applyPut(RestContext body) throws Exception { }
 
-    default void applyPostWrapper(RestContext body) {
-        try {
-            applyPost(body);
-        } catch (PowerAssertionError error) {
-            HttpResponse response = body.getResponse();
-            response.setBody(null);
-            response.setErrCode("PARAM_ASSERT_ERROR");
-            response.setErrMessage(error.getLocalizedMessage());
-        }
-    }
+    default void applyDelete(RestContext body) throws Exception { }
+
+    default void applyPost(RestContext body) throws Exception { }
 }

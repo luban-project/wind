@@ -1,6 +1,7 @@
 package com.lvonce.wind.sql.handler;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.lvonce.wind.sql.*;
 import com.lvonce.wind.sql.state.TransactionStateNoneImpl;
@@ -25,7 +26,7 @@ public class TransactionHandlerNoneImpl implements TransactionHandler {
     }
 
     @Override
-    public TransactionResult apply(TransactionFunc func) {
+    public TransactionResult apply(TransactionFunc func) throws SQLException {
         Transaction transaction = new Transaction(connection, IsolationLevel.NONE, transactionState);
         return func.execute(transaction);
     }
