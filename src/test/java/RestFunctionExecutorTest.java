@@ -1,5 +1,5 @@
 import com.lvonce.wind.RestFunctionExecutor;
-import com.lvonce.wind.RestFunctionFactory;
+import com.lvonce.wind.factory.RestFunctionFactoryNormal;
 import com.lvonce.wind.http.HttpRequest;
 import com.lvonce.wind.http.HttpRequestBody;
 import com.lvonce.wind.http.HttpResponse;
@@ -14,9 +14,9 @@ import java.util.Map;
 public class RestFunctionExecutorTest {
 
     @Test
-    public void test() {
-        RestFunctionFactory factory = RestFunctionFactory.getInstance();
-        factory.register("/hello", "ALL", RestTestFunction::new);
+    public void test() throws Exception {
+        RestFunctionFactoryNormal factory = RestFunctionFactoryNormal.getInstance();
+//        factory.register("/hello", "ALL", RestTestFunction::new);
 
 
         RestFunctionExecutor executor = new RestFunctionExecutor(factory);

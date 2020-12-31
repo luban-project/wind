@@ -1,6 +1,8 @@
 package com.lvonce.wind;
 
 
+import com.lvonce.wind.factory.RestFunctionFactory;
+import com.lvonce.wind.factory.RestFunctionFactoryNormal;
 import com.lvonce.wind.http.HttpRequest;
 import com.lvonce.wind.http.HttpResponse;
 import com.zaxxer.hikari.HikariConfig;
@@ -21,6 +23,7 @@ import java.util.LinkedHashMap;
 @Slf4j
 public class RestFunctionExecutor {
     private final LinkedHashMap<String, DataSource> sqlDataSource = new LinkedHashMap<>();
+    private final LinkedHashMap<Pair<String, String>, String> restBindMap = new LinkedHashMap<>();
     private final RestFunctionFactory factory;
 
     public RestFunctionExecutor(RestFunctionFactory factory) {
@@ -51,18 +54,22 @@ public class RestFunctionExecutor {
         }
     }
 
+    public void registerRestRouter(String url, String method, String handlerName) {
+        Pair<String, String> key = Pair.of(url, method);
+        this.restBindMap.put(key, handlerName);
+    }
+
 
     public boolean shouldIntercept(String url, String method) {
-        return this.factory.hasFunction(url, method);
+        return this.restBindMap.get(Pair.of(url, method)) != null;
     }
 
     public HttpResponse apply(String url, String method, HttpRequest request) throws Exception {
         RestSqlContext context = new RestSqlContextImpl(this.sqlDataSource, request.getHeaders(), request.getParams(), request.getBody());
-        RestFunction func = factory.getFunction(url, method, false);
+        String handlerName = this.restBindMap.get(Pair.of(url, method));
+        RestFunction func = factory.getFunction(handlerName);
         func.apply(method, context);
         return context.getResponse();
     }
-
-
 
 }

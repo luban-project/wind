@@ -4,6 +4,8 @@ import com.lvonce.wind.http.HttpResponse;
 import org.apache.commons.lang3.NotImplementedException;
 import org.codehaus.groovy.runtime.powerassert.PowerAssertionError;
 
+import java.util.Map;
+
 public interface RestFunction {
 
     default void apply(String method, RestContext ctx) throws Exception {

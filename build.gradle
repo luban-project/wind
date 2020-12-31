@@ -1,5 +1,5 @@
 plugins {
-    id 'groovy'
+//    id 'groovy'
     id 'java'
     id 'maven-publish'
     id 'signing'
@@ -7,8 +7,11 @@ plugins {
 
 group 'com.lvonce'
 archivesBaseName = 'wind'
-version '0.3.6'
+version '0.4.0'
 description 'wind library'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 
 repositories {
     maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
@@ -33,11 +36,11 @@ task javadocJar(type: Jar) {
 }
 
 
-sourceSets.main.java.srcDirs = []
-sourceSets.main.groovy.srcDirs += ["src/main/java"]
-sourceSets.test.java.srcDirs = []
-sourceSets.test.groovy.srcDirs += ["src/test/java"]
-
+//sourceSets.main.java.srcDirs = []
+//sourceSets.main.groovy.srcDirs += ["src/main/java"]
+//sourceSets.test.java.srcDirs = []
+//sourceSets.test.groovy.srcDirs += ["src/test/java"]
+//
 
 
 
@@ -108,6 +111,10 @@ dependencies {
     compile group: 'com.baidu.unbiz', name: 'fluent-validator', version: '1.0.9'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     compile group: 'org.antlr', name: 'antlr4', version: '4.8'
+    compile 'io.methvin:directory-watcher:0.10.1'
+    compile 'commons-io:commons-io:2.6'
+    compile 'com.google.inject:guice:5.0.0-BETA-1'
+    compile 'javax.servlet:javax.servlet-api:4.0.1'
 
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
     compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
