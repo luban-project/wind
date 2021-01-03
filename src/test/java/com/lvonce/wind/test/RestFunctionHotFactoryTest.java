@@ -143,11 +143,15 @@ public class RestFunctionHotFactoryTest {
                 "import java.util.List;\n" +
                 "import java.util.Map;\n" +
                 "import com.google.inject.Inject;\n" +
+                "import com.lvonce.wind.RestRouter;\n" +
                 "\n" +
                 "public class HelloRest implements com.lvonce.wind.RestFunction {\n" +
                 "\n" +
                 "    @Inject\n" +
                 "    private Depen1 depen1;\n" +
+                "\n" +
+                "    @Inject\n" +
+                "    private RestRouter restRouter;\n" +
                 "\n" +
                 "\n" +
                 "    @Override\n" +
@@ -207,7 +211,7 @@ public class RestFunctionHotFactoryTest {
 
         RestFunctionFactoryHot factory = new RestFunctionFactoryHot();
         factory.scanDir("./testHot2");
-        factory.registerWatchingDir("./testHot2");
+        factory.watchDirToCompile("name", "./testHot2");
 
         RestFunction func = factory.getFunction("com.xxx.example.HelloRest");
 

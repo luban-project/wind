@@ -1,0 +1,16 @@
+sources:
+  - name: "source1"
+    url: "jdbc:h2:mem:dbc2m;DATABASE_TO_UPPER=false;MODE=MYSQL"
+    username: "sa"
+    password: ""
+    tables:
+      - |-
+        CREATE TABLE data_lake(
+        id int not null,
+        name varchar(20) null,
+        age int unsigned null,
+        primary key (id),
+        key test_idx_name_age(name, age)
+        );
+    data:
+      - "INSERT  INTO  data_lake VALUES (1, 'wang', 23);"

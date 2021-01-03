@@ -6,6 +6,6 @@ import java.util.List;
 
 public class DefaultFileHandler implements FileHandler {
     @Override
-    public void handle(List<File> files) throws Exception {
+    public void handle(File file) throws Exception {
     }
 }

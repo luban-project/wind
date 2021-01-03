@@ -2,6 +2,7 @@ package com.lvonce.wind;
 
 import com.lvonce.wind.RestFunctionExecutor;
 import com.lvonce.wind.factory.RestFunctionFactory;
+import com.lvonce.wind.http.HttpMethod;
 import com.lvonce.wind.http.HttpRequest;
 import com.lvonce.wind.http.HttpRequestBody;
 import com.lvonce.wind.http.HttpResponse;
@@ -84,10 +85,10 @@ public class WindWebFilter implements Filter {
             String url = httpServletRequest.getRequestURI();
 
             String method = httpServletRequest.getMethod().toUpperCase();
-            boolean shouldIntercept = executor.shouldIntercept(url, method);
+            boolean shouldIntercept = executor.shouldIntercept(url, HttpMethod.from(method));
             if (shouldIntercept) {
                 HttpRequest funcRequest = translate(httpServletRequest);
-                HttpResponse funcResponse = executor.apply(url, method, funcRequest);
+                HttpResponse funcResponse = executor.apply(url, HttpMethod.from(method), funcRequest);
                 output((HttpServletResponse) response, funcResponse);
             } else {
                 System.out.println(String.format("url: %s, not to intercept", url));

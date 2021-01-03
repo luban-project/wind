@@ -1,0 +1,7 @@
+routers:
+  - url: "url1"
+    method: "GET"
+    handler: "xxx.Hello"
+  - url: "test1"
+    method: "POST"
+    handler: "xxx.Test5"
